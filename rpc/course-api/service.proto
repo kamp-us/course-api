@@ -4,8 +4,10 @@ package kampus.courseapi;
 option go_package = "/rpc/course-api";
 
 service CourseAPI {
+  rpc GetCourse(GetCourseRequest) returns (Course);
   rpc CreateCourse(CreateCourseRequest) returns (Course);
 }
+
 
 message CreateCourseRequest {
   string userID = 1;
