@@ -55,11 +55,13 @@ type Lesson struct {
 
 	UserID string `gorm:"index"`
 
-	CourseID uuid.UUID
+	// TODO: should it be uuid or is string fine?
+	CourseID string
 	Course   Course
 
-	VideoID uuid.UUID
-	Video   Video
+	//// TODO: should it be uuid or is string fine?
+	//VideoID string
+	//Video   Video
 
 	Categories []*LessonCategory
 }

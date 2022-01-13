@@ -42,6 +42,12 @@ type CourseAPI interface {
 	UpdateCourse(context.Context, *UpdateCourseRequest) (*Course, error)
 
 	DeleteCourse(context.Context, *DeleteCourseRequest) (*google_protobuf1.Empty, error)
+
+	CreateLesson(context.Context, *CreateLessonRequest) (*Lesson, error)
+
+	GetLesson(context.Context, *GetLessonRequest) (*Lesson, error)
+
+	DeleteLesson(context.Context, *DeleteLessonRequest) (*google_protobuf1.Empty, error)
 }
 
 // =========================
@@ -50,7 +56,7 @@ type CourseAPI interface {
 
 type courseAPIProtobufClient struct {
 	client      HTTPClient
-	urls        [4]string
+	urls        [7]string
 	interceptor twirp.Interceptor
 	opts        twirp.ClientOptions
 }
@@ -78,11 +84,14 @@ func NewCourseAPIProtobufClient(baseURL string, client HTTPClient, opts ...twirp
 	// Build method URLs: <baseURL>[<prefix>]/<package>.<Service>/<Method>
 	serviceURL := sanitizeBaseURL(baseURL)
 	serviceURL += baseServicePath(pathPrefix, "kampus.courseapi", "CourseAPI")
-	urls := [4]string{
+	urls := [7]string{
 		serviceURL + "GetCourse",
 		serviceURL + "CreateCourse",
 		serviceURL + "UpdateCourse",
 		serviceURL + "DeleteCourse",
+		serviceURL + "CreateLesson",
+		serviceURL + "GetLesson",
+		serviceURL + "DeleteLesson",
 	}
 
 	return &courseAPIProtobufClient{
@@ -277,13 +286,151 @@ func (c *courseAPIProtobufClient) callDeleteCourse(ctx context.Context, in *Dele
 	return out, nil
 }
 
+func (c *courseAPIProtobufClient) CreateLesson(ctx context.Context, in *CreateLessonRequest) (*Lesson, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "kampus.courseapi")
+	ctx = ctxsetters.WithServiceName(ctx, "CourseAPI")
+	ctx = ctxsetters.WithMethodName(ctx, "CreateLesson")
+	caller := c.callCreateLesson
+	if c.interceptor != nil {
+		caller = func(ctx context.Context, req *CreateLessonRequest) (*Lesson, error) {
+			resp, err := c.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*CreateLessonRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*CreateLessonRequest) when calling interceptor")
+					}
+					return c.callCreateLesson(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*Lesson)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*Lesson) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+	return caller(ctx, in)
+}
+
+func (c *courseAPIProtobufClient) callCreateLesson(ctx context.Context, in *CreateLessonRequest) (*Lesson, error) {
+	out := new(Lesson)
+	ctx, err := doProtobufRequest(ctx, c.client, c.opts.Hooks, c.urls[4], in, out)
+	if err != nil {
+		twerr, ok := err.(twirp.Error)
+		if !ok {
+			twerr = twirp.InternalErrorWith(err)
+		}
+		callClientError(ctx, c.opts.Hooks, twerr)
+		return nil, err
+	}
+
+	callClientResponseReceived(ctx, c.opts.Hooks)
+
+	return out, nil
+}
+
+func (c *courseAPIProtobufClient) GetLesson(ctx context.Context, in *GetLessonRequest) (*Lesson, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "kampus.courseapi")
+	ctx = ctxsetters.WithServiceName(ctx, "CourseAPI")
+	ctx = ctxsetters.WithMethodName(ctx, "GetLesson")
+	caller := c.callGetLesson
+	if c.interceptor != nil {
+		caller = func(ctx context.Context, req *GetLessonRequest) (*Lesson, error) {
+			resp, err := c.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*GetLessonRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*GetLessonRequest) when calling interceptor")
+					}
+					return c.callGetLesson(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*Lesson)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*Lesson) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+	return caller(ctx, in)
+}
+
+func (c *courseAPIProtobufClient) callGetLesson(ctx context.Context, in *GetLessonRequest) (*Lesson, error) {
+	out := new(Lesson)
+	ctx, err := doProtobufRequest(ctx, c.client, c.opts.Hooks, c.urls[5], in, out)
+	if err != nil {
+		twerr, ok := err.(twirp.Error)
+		if !ok {
+			twerr = twirp.InternalErrorWith(err)
+		}
+		callClientError(ctx, c.opts.Hooks, twerr)
+		return nil, err
+	}
+
+	callClientResponseReceived(ctx, c.opts.Hooks)
+
+	return out, nil
+}
+
+func (c *courseAPIProtobufClient) DeleteLesson(ctx context.Context, in *DeleteLessonRequest) (*google_protobuf1.Empty, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "kampus.courseapi")
+	ctx = ctxsetters.WithServiceName(ctx, "CourseAPI")
+	ctx = ctxsetters.WithMethodName(ctx, "DeleteLesson")
+	caller := c.callDeleteLesson
+	if c.interceptor != nil {
+		caller = func(ctx context.Context, req *DeleteLessonRequest) (*google_protobuf1.Empty, error) {
+			resp, err := c.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*DeleteLessonRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*DeleteLessonRequest) when calling interceptor")
+					}
+					return c.callDeleteLesson(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*google_protobuf1.Empty)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*google_protobuf1.Empty) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+	return caller(ctx, in)
+}
+
+func (c *courseAPIProtobufClient) callDeleteLesson(ctx context.Context, in *DeleteLessonRequest) (*google_protobuf1.Empty, error) {
+	out := new(google_protobuf1.Empty)
+	ctx, err := doProtobufRequest(ctx, c.client, c.opts.Hooks, c.urls[6], in, out)
+	if err != nil {
+		twerr, ok := err.(twirp.Error)
+		if !ok {
+			twerr = twirp.InternalErrorWith(err)
+		}
+		callClientError(ctx, c.opts.Hooks, twerr)
+		return nil, err
+	}
+
+	callClientResponseReceived(ctx, c.opts.Hooks)
+
+	return out, nil
+}
+
 // =====================
 // CourseAPI JSON Client
 // =====================
 
 type courseAPIJSONClient struct {
 	client      HTTPClient
-	urls        [4]string
+	urls        [7]string
 	interceptor twirp.Interceptor
 	opts        twirp.ClientOptions
 }
@@ -311,11 +458,14 @@ func NewCourseAPIJSONClient(baseURL string, client HTTPClient, opts ...twirp.Cli
 	// Build method URLs: <baseURL>[<prefix>]/<package>.<Service>/<Method>
 	serviceURL := sanitizeBaseURL(baseURL)
 	serviceURL += baseServicePath(pathPrefix, "kampus.courseapi", "CourseAPI")
-	urls := [4]string{
+	urls := [7]string{
 		serviceURL + "GetCourse",
 		serviceURL + "CreateCourse",
 		serviceURL + "UpdateCourse",
 		serviceURL + "DeleteCourse",
+		serviceURL + "CreateLesson",
+		serviceURL + "GetLesson",
+		serviceURL + "DeleteLesson",
 	}
 
 	return &courseAPIJSONClient{
@@ -510,6 +660,144 @@ func (c *courseAPIJSONClient) callDeleteCourse(ctx context.Context, in *DeleteCo
 	return out, nil
 }
 
+func (c *courseAPIJSONClient) CreateLesson(ctx context.Context, in *CreateLessonRequest) (*Lesson, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "kampus.courseapi")
+	ctx = ctxsetters.WithServiceName(ctx, "CourseAPI")
+	ctx = ctxsetters.WithMethodName(ctx, "CreateLesson")
+	caller := c.callCreateLesson
+	if c.interceptor != nil {
+		caller = func(ctx context.Context, req *CreateLessonRequest) (*Lesson, error) {
+			resp, err := c.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*CreateLessonRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*CreateLessonRequest) when calling interceptor")
+					}
+					return c.callCreateLesson(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*Lesson)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*Lesson) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+	return caller(ctx, in)
+}
+
+func (c *courseAPIJSONClient) callCreateLesson(ctx context.Context, in *CreateLessonRequest) (*Lesson, error) {
+	out := new(Lesson)
+	ctx, err := doJSONRequest(ctx, c.client, c.opts.Hooks, c.urls[4], in, out)
+	if err != nil {
+		twerr, ok := err.(twirp.Error)
+		if !ok {
+			twerr = twirp.InternalErrorWith(err)
+		}
+		callClientError(ctx, c.opts.Hooks, twerr)
+		return nil, err
+	}
+
+	callClientResponseReceived(ctx, c.opts.Hooks)
+
+	return out, nil
+}
+
+func (c *courseAPIJSONClient) GetLesson(ctx context.Context, in *GetLessonRequest) (*Lesson, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "kampus.courseapi")
+	ctx = ctxsetters.WithServiceName(ctx, "CourseAPI")
+	ctx = ctxsetters.WithMethodName(ctx, "GetLesson")
+	caller := c.callGetLesson
+	if c.interceptor != nil {
+		caller = func(ctx context.Context, req *GetLessonRequest) (*Lesson, error) {
+			resp, err := c.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*GetLessonRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*GetLessonRequest) when calling interceptor")
+					}
+					return c.callGetLesson(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*Lesson)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*Lesson) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+	return caller(ctx, in)
+}
+
+func (c *courseAPIJSONClient) callGetLesson(ctx context.Context, in *GetLessonRequest) (*Lesson, error) {
+	out := new(Lesson)
+	ctx, err := doJSONRequest(ctx, c.client, c.opts.Hooks, c.urls[5], in, out)
+	if err != nil {
+		twerr, ok := err.(twirp.Error)
+		if !ok {
+			twerr = twirp.InternalErrorWith(err)
+		}
+		callClientError(ctx, c.opts.Hooks, twerr)
+		return nil, err
+	}
+
+	callClientResponseReceived(ctx, c.opts.Hooks)
+
+	return out, nil
+}
+
+func (c *courseAPIJSONClient) DeleteLesson(ctx context.Context, in *DeleteLessonRequest) (*google_protobuf1.Empty, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "kampus.courseapi")
+	ctx = ctxsetters.WithServiceName(ctx, "CourseAPI")
+	ctx = ctxsetters.WithMethodName(ctx, "DeleteLesson")
+	caller := c.callDeleteLesson
+	if c.interceptor != nil {
+		caller = func(ctx context.Context, req *DeleteLessonRequest) (*google_protobuf1.Empty, error) {
+			resp, err := c.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*DeleteLessonRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*DeleteLessonRequest) when calling interceptor")
+					}
+					return c.callDeleteLesson(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*google_protobuf1.Empty)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*google_protobuf1.Empty) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+	return caller(ctx, in)
+}
+
+func (c *courseAPIJSONClient) callDeleteLesson(ctx context.Context, in *DeleteLessonRequest) (*google_protobuf1.Empty, error) {
+	out := new(google_protobuf1.Empty)
+	ctx, err := doJSONRequest(ctx, c.client, c.opts.Hooks, c.urls[6], in, out)
+	if err != nil {
+		twerr, ok := err.(twirp.Error)
+		if !ok {
+			twerr = twirp.InternalErrorWith(err)
+		}
+		callClientError(ctx, c.opts.Hooks, twerr)
+		return nil, err
+	}
+
+	callClientResponseReceived(ctx, c.opts.Hooks)
+
+	return out, nil
+}
+
 // ========================
 // CourseAPI Server Handler
 // ========================
@@ -618,6 +906,15 @@ func (s *courseAPIServer) ServeHTTP(resp http.ResponseWriter, req *http.Request)
 		return
 	case "DeleteCourse":
 		s.serveDeleteCourse(ctx, resp, req)
+		return
+	case "CreateLesson":
+		s.serveCreateLesson(ctx, resp, req)
+		return
+	case "GetLesson":
+		s.serveGetLesson(ctx, resp, req)
+		return
+	case "DeleteLesson":
+		s.serveDeleteLesson(ctx, resp, req)
 		return
 	default:
 		msg := fmt.Sprintf("no handler for path %q", req.URL.Path)
@@ -1346,6 +1643,546 @@ func (s *courseAPIServer) serveDeleteCourseProtobuf(ctx context.Context, resp ht
 	callResponseSent(ctx, s.hooks)
 }
 
+func (s *courseAPIServer) serveCreateLesson(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	header := req.Header.Get("Content-Type")
+	i := strings.Index(header, ";")
+	if i == -1 {
+		i = len(header)
+	}
+	switch strings.TrimSpace(strings.ToLower(header[:i])) {
+	case "application/json":
+		s.serveCreateLessonJSON(ctx, resp, req)
+	case "application/protobuf":
+		s.serveCreateLessonProtobuf(ctx, resp, req)
+	default:
+		msg := fmt.Sprintf("unexpected Content-Type: %q", req.Header.Get("Content-Type"))
+		twerr := badRouteError(msg, req.Method, req.URL.Path)
+		s.writeError(ctx, resp, twerr)
+	}
+}
+
+func (s *courseAPIServer) serveCreateLessonJSON(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "CreateLesson")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	d := json.NewDecoder(req.Body)
+	rawReqBody := json.RawMessage{}
+	if err := d.Decode(&rawReqBody); err != nil {
+		s.handleRequestBodyError(ctx, resp, "the json request could not be decoded", err)
+		return
+	}
+	reqContent := new(CreateLessonRequest)
+	unmarshaler := protojson.UnmarshalOptions{DiscardUnknown: true}
+	if err = unmarshaler.Unmarshal(rawReqBody, reqContent); err != nil {
+		s.handleRequestBodyError(ctx, resp, "the json request could not be decoded", err)
+		return
+	}
+
+	handler := s.CourseAPI.CreateLesson
+	if s.interceptor != nil {
+		handler = func(ctx context.Context, req *CreateLessonRequest) (*Lesson, error) {
+			resp, err := s.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*CreateLessonRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*CreateLessonRequest) when calling interceptor")
+					}
+					return s.CourseAPI.CreateLesson(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*Lesson)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*Lesson) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+
+	// Call service method
+	var respContent *Lesson
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = handler(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *Lesson and nil error while calling CreateLesson. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	marshaler := &protojson.MarshalOptions{UseProtoNames: !s.jsonCamelCase, EmitUnpopulated: !s.jsonSkipDefaults}
+	respBytes, err := marshaler.Marshal(respContent)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal json response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	resp.Header().Set("Content-Type", "application/json")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		ctx = callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *courseAPIServer) serveCreateLessonProtobuf(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "CreateLesson")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	buf, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		s.handleRequestBodyError(ctx, resp, "failed to read request body", err)
+		return
+	}
+	reqContent := new(CreateLessonRequest)
+	if err = proto.Unmarshal(buf, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the protobuf request could not be decoded"))
+		return
+	}
+
+	handler := s.CourseAPI.CreateLesson
+	if s.interceptor != nil {
+		handler = func(ctx context.Context, req *CreateLessonRequest) (*Lesson, error) {
+			resp, err := s.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*CreateLessonRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*CreateLessonRequest) when calling interceptor")
+					}
+					return s.CourseAPI.CreateLesson(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*Lesson)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*Lesson) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+
+	// Call service method
+	var respContent *Lesson
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = handler(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *Lesson and nil error while calling CreateLesson. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	respBytes, err := proto.Marshal(respContent)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal proto response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	resp.Header().Set("Content-Type", "application/protobuf")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		ctx = callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *courseAPIServer) serveGetLesson(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	header := req.Header.Get("Content-Type")
+	i := strings.Index(header, ";")
+	if i == -1 {
+		i = len(header)
+	}
+	switch strings.TrimSpace(strings.ToLower(header[:i])) {
+	case "application/json":
+		s.serveGetLessonJSON(ctx, resp, req)
+	case "application/protobuf":
+		s.serveGetLessonProtobuf(ctx, resp, req)
+	default:
+		msg := fmt.Sprintf("unexpected Content-Type: %q", req.Header.Get("Content-Type"))
+		twerr := badRouteError(msg, req.Method, req.URL.Path)
+		s.writeError(ctx, resp, twerr)
+	}
+}
+
+func (s *courseAPIServer) serveGetLessonJSON(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "GetLesson")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	d := json.NewDecoder(req.Body)
+	rawReqBody := json.RawMessage{}
+	if err := d.Decode(&rawReqBody); err != nil {
+		s.handleRequestBodyError(ctx, resp, "the json request could not be decoded", err)
+		return
+	}
+	reqContent := new(GetLessonRequest)
+	unmarshaler := protojson.UnmarshalOptions{DiscardUnknown: true}
+	if err = unmarshaler.Unmarshal(rawReqBody, reqContent); err != nil {
+		s.handleRequestBodyError(ctx, resp, "the json request could not be decoded", err)
+		return
+	}
+
+	handler := s.CourseAPI.GetLesson
+	if s.interceptor != nil {
+		handler = func(ctx context.Context, req *GetLessonRequest) (*Lesson, error) {
+			resp, err := s.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*GetLessonRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*GetLessonRequest) when calling interceptor")
+					}
+					return s.CourseAPI.GetLesson(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*Lesson)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*Lesson) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+
+	// Call service method
+	var respContent *Lesson
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = handler(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *Lesson and nil error while calling GetLesson. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	marshaler := &protojson.MarshalOptions{UseProtoNames: !s.jsonCamelCase, EmitUnpopulated: !s.jsonSkipDefaults}
+	respBytes, err := marshaler.Marshal(respContent)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal json response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	resp.Header().Set("Content-Type", "application/json")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		ctx = callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *courseAPIServer) serveGetLessonProtobuf(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "GetLesson")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	buf, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		s.handleRequestBodyError(ctx, resp, "failed to read request body", err)
+		return
+	}
+	reqContent := new(GetLessonRequest)
+	if err = proto.Unmarshal(buf, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the protobuf request could not be decoded"))
+		return
+	}
+
+	handler := s.CourseAPI.GetLesson
+	if s.interceptor != nil {
+		handler = func(ctx context.Context, req *GetLessonRequest) (*Lesson, error) {
+			resp, err := s.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*GetLessonRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*GetLessonRequest) when calling interceptor")
+					}
+					return s.CourseAPI.GetLesson(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*Lesson)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*Lesson) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+
+	// Call service method
+	var respContent *Lesson
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = handler(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *Lesson and nil error while calling GetLesson. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	respBytes, err := proto.Marshal(respContent)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal proto response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	resp.Header().Set("Content-Type", "application/protobuf")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		ctx = callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *courseAPIServer) serveDeleteLesson(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	header := req.Header.Get("Content-Type")
+	i := strings.Index(header, ";")
+	if i == -1 {
+		i = len(header)
+	}
+	switch strings.TrimSpace(strings.ToLower(header[:i])) {
+	case "application/json":
+		s.serveDeleteLessonJSON(ctx, resp, req)
+	case "application/protobuf":
+		s.serveDeleteLessonProtobuf(ctx, resp, req)
+	default:
+		msg := fmt.Sprintf("unexpected Content-Type: %q", req.Header.Get("Content-Type"))
+		twerr := badRouteError(msg, req.Method, req.URL.Path)
+		s.writeError(ctx, resp, twerr)
+	}
+}
+
+func (s *courseAPIServer) serveDeleteLessonJSON(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "DeleteLesson")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	d := json.NewDecoder(req.Body)
+	rawReqBody := json.RawMessage{}
+	if err := d.Decode(&rawReqBody); err != nil {
+		s.handleRequestBodyError(ctx, resp, "the json request could not be decoded", err)
+		return
+	}
+	reqContent := new(DeleteLessonRequest)
+	unmarshaler := protojson.UnmarshalOptions{DiscardUnknown: true}
+	if err = unmarshaler.Unmarshal(rawReqBody, reqContent); err != nil {
+		s.handleRequestBodyError(ctx, resp, "the json request could not be decoded", err)
+		return
+	}
+
+	handler := s.CourseAPI.DeleteLesson
+	if s.interceptor != nil {
+		handler = func(ctx context.Context, req *DeleteLessonRequest) (*google_protobuf1.Empty, error) {
+			resp, err := s.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*DeleteLessonRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*DeleteLessonRequest) when calling interceptor")
+					}
+					return s.CourseAPI.DeleteLesson(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*google_protobuf1.Empty)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*google_protobuf1.Empty) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+
+	// Call service method
+	var respContent *google_protobuf1.Empty
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = handler(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *google_protobuf1.Empty and nil error while calling DeleteLesson. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	marshaler := &protojson.MarshalOptions{UseProtoNames: !s.jsonCamelCase, EmitUnpopulated: !s.jsonSkipDefaults}
+	respBytes, err := marshaler.Marshal(respContent)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal json response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	resp.Header().Set("Content-Type", "application/json")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		ctx = callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *courseAPIServer) serveDeleteLessonProtobuf(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "DeleteLesson")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	buf, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		s.handleRequestBodyError(ctx, resp, "failed to read request body", err)
+		return
+	}
+	reqContent := new(DeleteLessonRequest)
+	if err = proto.Unmarshal(buf, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the protobuf request could not be decoded"))
+		return
+	}
+
+	handler := s.CourseAPI.DeleteLesson
+	if s.interceptor != nil {
+		handler = func(ctx context.Context, req *DeleteLessonRequest) (*google_protobuf1.Empty, error) {
+			resp, err := s.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*DeleteLessonRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*DeleteLessonRequest) when calling interceptor")
+					}
+					return s.CourseAPI.DeleteLesson(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*google_protobuf1.Empty)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*google_protobuf1.Empty) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+
+	// Call service method
+	var respContent *google_protobuf1.Empty
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = handler(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *google_protobuf1.Empty and nil error while calling DeleteLesson. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	respBytes, err := proto.Marshal(respContent)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal proto response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	resp.Header().Set("Content-Type", "application/protobuf")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		ctx = callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
 func (s *courseAPIServer) ServiceDescriptor() ([]byte, int) {
 	return twirpFileDescriptor0, 0
 }
@@ -1924,31 +2761,39 @@ func callClientError(ctx context.Context, h *twirp.ClientHooks, err twirp.Error)
 }
 
 var twirpFileDescriptor0 = []byte{
-	// 407 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x54, 0xc1, 0x4a, 0xeb, 0x40,
-	0x14, 0x25, 0x69, 0x5f, 0x1e, 0x9d, 0x16, 0xad, 0x53, 0xd0, 0x10, 0x8b, 0xd4, 0x40, 0xc1, 0x8d,
-	0x89, 0xd4, 0xbd, 0xa2, 0xad, 0x48, 0x16, 0xa2, 0x54, 0x74, 0xe1, 0xa6, 0x4c, 0x93, 0x6b, 0x18,
-	0x4c, 0x9b, 0x71, 0x66, 0xa2, 0xf4, 0x0b, 0xfc, 0x0b, 0x7f, 0xc7, 0x5f, 0xf0, 0x73, 0x24, 0x49,
-	0x2b, 0x69, 0x12, 0x9b, 0xdd, 0xe4, 0xde, 0x73, 0x0f, 0xe7, 0xce, 0x39, 0x19, 0xd4, 0xe5, 0xcc,
-	0xb5, 0xdd, 0x30, 0xe2, 0x02, 0x8e, 0x09, 0xa3, 0xb6, 0x00, 0xfe, 0x46, 0x5d, 0xb0, 0x18, 0x0f,
-	0x65, 0x88, 0xdb, 0x2f, 0x64, 0xc6, 0x22, 0x61, 0xa5, 0x00, 0xc2, 0xa8, 0x71, 0xe0, 0x87, 0xa1,
-	0x1f, 0x80, 0x9d, 0xf4, 0xa7, 0xd1, 0xb3, 0xfd, 0xce, 0x09, 0x63, 0xc0, 0x45, 0x3a, 0x61, 0xec,
-	0xe7, 0xfb, 0x30, 0x63, 0x72, 0x91, 0x36, 0x4d, 0x13, 0xb5, 0xaf, 0x41, 0x0e, 0x13, 0xb2, 0x31,
-	0xbc, 0x46, 0x20, 0x24, 0xde, 0x42, 0xaa, 0x33, 0xd2, 0x95, 0x9e, 0x72, 0xd4, 0x18, 0xab, 0xce,
-	0xc8, 0xfc, 0x50, 0x50, 0x67, 0xc8, 0x81, 0x48, 0x58, 0xc7, 0xed, 0xa1, 0xff, 0x91, 0x00, 0x3e,
-	0xa1, 0xde, 0x12, 0xac, 0xc5, 0x9f, 0x8e, 0x87, 0x31, 0xaa, 0xcf, 0xc9, 0x0c, 0x74, 0x35, 0xa9,
-	0x26, 0x67, 0xdc, 0x43, 0x4d, 0x0f, 0x84, 0xcb, 0x29, 0x93, 0x34, 0x9c, 0xeb, 0xb5, 0xa4, 0x95,
-	0x2d, 0xe1, 0x43, 0xd4, 0x72, 0x89, 0x04, 0x3f, 0xe4, 0x8b, 0x09, 0xf5, 0x84, 0x5e, 0xef, 0xd5,
-	0x62, 0xc8, 0xaa, 0xe6, 0x78, 0xc2, 0xfc, 0x56, 0x50, 0xe7, 0x81, 0x79, 0x05, 0x25, 0x39, 0xc5,
-	0xf8, 0x24, 0x23, 0xa0, 0x39, 0xe8, 0x5a, 0xe9, 0x0d, 0x58, 0xab, 0x1b, 0xb0, 0xee, 0x25, 0xa7,
-	0x73, 0xff, 0x91, 0x04, 0x11, 0x2c, 0xe5, 0x9d, 0x15, 0xe5, 0x55, 0x0d, 0xae, 0x89, 0x3f, 0x2f,
-	0x11, 0x5f, 0x49, 0x90, 0x5d, 0xad, 0x8f, 0x3a, 0x23, 0x08, 0xa0, 0x62, 0x33, 0xf3, 0x53, 0x41,
-	0x5a, 0x8a, 0x28, 0x2c, 0x9d, 0xb1, 0x43, 0x2d, 0xb5, 0xa3, 0xf6, 0xb7, 0x1d, 0xf5, 0x6a, 0x3b,
-	0xfe, 0x15, 0xec, 0x88, 0x89, 0x45, 0x10, 0xf9, 0xba, 0x96, 0x12, 0xc7, 0xe7, 0xc1, 0x97, 0x8a,
-	0x1a, 0xa9, 0xc0, 0x8b, 0x3b, 0x07, 0x3b, 0xa8, 0xf1, 0x1b, 0x2f, 0x6c, 0x5a, 0xf9, 0xec, 0x5a,
-	0xf9, 0xec, 0x19, 0x7a, 0x11, 0xb3, 0x9c, 0xbe, 0x45, 0xad, 0x6c, 0x08, 0x71, 0xbf, 0x04, 0x59,
-	0x0c, 0xe9, 0x66, 0xc2, 0x6c, 0x96, 0xca, 0x08, 0x4b, 0xb2, 0xb6, 0x81, 0xf0, 0x06, 0xb5, 0xb2,
-	0x16, 0x96, 0x11, 0x96, 0x58, 0x6c, 0xec, 0x16, 0x42, 0x72, 0x15, 0xff, 0xa0, 0x97, 0x3b, 0x4f,
-	0xdb, 0xf6, 0xfa, 0x53, 0x30, 0xd5, 0x12, 0xc8, 0xe9, 0x4f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x66,
-	0xc2, 0xb1, 0x18, 0x23, 0x04, 0x00, 0x00,
+	// 531 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xc4, 0x55, 0xd1, 0x8a, 0xd3, 0x40,
+	0x14, 0x25, 0x6d, 0x36, 0x6d, 0xef, 0x16, 0x5d, 0xa7, 0xa0, 0xb1, 0xbb, 0x48, 0x0d, 0x2c, 0xf8,
+	0x62, 0x22, 0xeb, 0xbb, 0xa0, 0x5b, 0x91, 0x80, 0xa2, 0xac, 0xe8, 0x83, 0x2f, 0x4b, 0x36, 0xb9,
+	0x86, 0xc1, 0xb6, 0x33, 0xce, 0x24, 0x2b, 0xfb, 0x05, 0x7e, 0x82, 0x2f, 0xe2, 0x47, 0xf8, 0x31,
+	0x7e, 0x8f, 0x24, 0x93, 0x6d, 0x93, 0xce, 0x24, 0xdb, 0x07, 0xc1, 0xb7, 0xcc, 0xcc, 0xb9, 0x97,
+	0x73, 0xcf, 0x3d, 0x3d, 0x85, 0x23, 0xc1, 0xe3, 0x20, 0x66, 0xb9, 0x90, 0xf8, 0x38, 0xe2, 0x34,
+	0x90, 0x28, 0x2e, 0x69, 0x8c, 0x3e, 0x17, 0x2c, 0x63, 0xe4, 0xe0, 0x4b, 0xb4, 0xe4, 0xb9, 0xf4,
+	0x15, 0x20, 0xe2, 0x74, 0xfa, 0x20, 0x65, 0x2c, 0x5d, 0x60, 0x50, 0xbe, 0x5f, 0xe4, 0x9f, 0x83,
+	0x6f, 0x22, 0xe2, 0x1c, 0x85, 0x54, 0x15, 0xd3, 0xc3, 0xed, 0x77, 0x5c, 0xf2, 0xec, 0x4a, 0x3d,
+	0x7a, 0x1e, 0x1c, 0xbc, 0xc2, 0xec, 0xb4, 0x6c, 0x76, 0x86, 0x5f, 0x73, 0x94, 0x19, 0xb9, 0x05,
+	0xbd, 0x70, 0xee, 0x5a, 0x33, 0xeb, 0xd1, 0xe8, 0xac, 0x17, 0xce, 0xbd, 0xef, 0x16, 0x4c, 0x4e,
+	0x05, 0x46, 0x19, 0x36, 0x71, 0xf7, 0x60, 0x90, 0x4b, 0x14, 0xe7, 0x34, 0xa9, 0xc0, 0x4e, 0x71,
+	0x0c, 0x13, 0x42, 0xc0, 0x5e, 0x45, 0x4b, 0x74, 0x7b, 0xe5, 0x6d, 0xf9, 0x4d, 0x66, 0xb0, 0x9f,
+	0xa0, 0x8c, 0x05, 0xe5, 0x19, 0x65, 0x2b, 0xb7, 0x5f, 0x3e, 0xd5, 0xaf, 0xc8, 0x43, 0x18, 0xc7,
+	0x51, 0x86, 0x29, 0x13, 0x57, 0xe7, 0x34, 0x91, 0xae, 0x3d, 0xeb, 0x17, 0x90, 0xeb, 0xbb, 0x30,
+	0x91, 0xde, 0x0f, 0x0b, 0x26, 0x1f, 0x78, 0xa2, 0x31, 0xd9, 0x62, 0x4c, 0x9e, 0xd4, 0x08, 0xec,
+	0x9f, 0x1c, 0xf9, 0x4a, 0x01, 0xff, 0x5a, 0x01, 0xff, 0x7d, 0x26, 0xe8, 0x2a, 0xfd, 0x18, 0x2d,
+	0x72, 0xac, 0xe8, 0x3d, 0xd3, 0xe9, 0xdd, 0x54, 0x58, 0x2f, 0xf0, 0x8e, 0x61, 0x32, 0xc7, 0x05,
+	0xde, 0x40, 0xcc, 0xfb, 0x65, 0x81, 0xa3, 0x10, 0x1a, 0xe7, 0x9a, 0x9a, 0x3d, 0xa3, 0x9a, 0xfd,
+	0x76, 0x35, 0x6d, 0x5d, 0x4d, 0x02, 0xb6, 0x5c, 0xe4, 0xa9, 0xbb, 0xa7, 0xaa, 0x8a, 0x6f, 0x4d,
+	0x61, 0x47, 0x57, 0x58, 0xf9, 0xe1, 0x35, 0x4a, 0xc9, 0x56, 0x6d, 0x43, 0xfc, 0x5c, 0xfb, 0xa1,
+	0x89, 0xfb, 0xc7, 0x7e, 0x38, 0x84, 0x91, 0x32, 0x79, 0xd1, 0x50, 0x4d, 0x38, 0x54, 0x17, 0x61,
+	0x42, 0xee, 0xc3, 0xf0, 0x92, 0x26, 0xc8, 0x8a, 0x37, 0x35, 0xe2, 0xa0, 0x3c, 0x87, 0xc9, 0x66,
+	0x15, 0xdd, 0x53, 0x6c, 0xbc, 0xd4, 0x89, 0xfb, 0x0f, 0x5e, 0xfa, 0x63, 0x81, 0xa3, 0x38, 0xed,
+	0x6e, 0x92, 0x86, 0x58, 0xfd, 0x0e, 0xb1, 0xec, 0x86, 0x58, 0xeb, 0xd5, 0xec, 0xb5, 0xaf, 0xc6,
+	0x69, 0x37, 0xd7, 0xa0, 0xc3, 0x5c, 0x43, 0xcd, 0x5c, 0x27, 0xbf, 0x6d, 0x18, 0x29, 0xf7, 0x3f,
+	0x7f, 0x17, 0x92, 0x10, 0x46, 0xeb, 0xe8, 0x21, 0x9e, 0xbf, 0x9d, 0x6b, 0xfe, 0x76, 0x2e, 0x4d,
+	0x5d, 0x1d, 0x53, 0x55, 0xbf, 0x85, 0x71, 0x3d, 0xa0, 0xc8, 0xb1, 0x01, 0xa9, 0x07, 0x58, 0x77,
+	0xc3, 0x7a, 0xce, 0x98, 0x1a, 0x1a, 0x72, 0xa8, 0xa3, 0xe1, 0x1b, 0x18, 0xd7, 0xf3, 0xc1, 0xd4,
+	0xd0, 0x90, 0x1f, 0xd3, 0xbb, 0x9a, 0x6b, 0x5e, 0x16, 0xe1, 0xbd, 0x19, 0xb8, 0xf2, 0x49, 0xeb,
+	0xc0, 0x0d, 0x6f, 0x9b, 0xf8, 0x55, 0x0d, 0xd4, 0x32, 0xaa, 0x83, 0x79, 0x19, 0xbb, 0xb6, 0x5a,
+	0x8f, 0xda, 0xce, 0xcd, 0xf0, 0xfb, 0x6c, 0x1b, 0xf5, 0xc5, 0x9d, 0x4f, 0xb7, 0x83, 0xe6, 0x3f,
+	0xe2, 0x85, 0x53, 0x42, 0x9e, 0xfe, 0x0d, 0x00, 0x00, 0xff, 0xff, 0x07, 0x16, 0x42, 0xfb, 0x2a,
+	0x07, 0x00, 0x00,
 }
