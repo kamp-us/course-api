@@ -16,12 +16,14 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/twitchtv/twirp v8.1.1+incompatible // indirect
+	github.com/twitchtv/twirp v8.1.1+incompatible
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	google.golang.org/protobuf v1.27.1 // indirect
-	gorm.io/driver/postgres v1.2.3 // indirect
-	gorm.io/gorm v1.22.4 // indirect
+	google.golang.org/protobuf v1.27.1
+	gorm.io/driver/postgres v1.2.3
+	gorm.io/gorm v1.22.4
 )
+
+require github.com/gofrs/uuid v4.0.0+incompatible
 
 require github.com/gosimple/unidecode v1.0.1 // indirect

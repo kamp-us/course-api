@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	db, err := db.NewPostgreSQLConnection(db.PostgreSQLConfig{
+	dbClient, err := db.NewPostgreSQLConnection(db.PostgreSQLConfig{
 		Host:     os.Getenv("POSTGRES_HOST"),
 		Port:     5432,
 		Username: os.Getenv("POSTGRES_USER"),
@@ -24,10 +24,10 @@ func main() {
 		log.Fatal("error while creating a db connection pool", err)
 	}
 
-	models.AutoMigrate(db)
+	models.AutoMigrate(dbClient)
 
 	server := &server.CourseAPIServer{
-		Db: db,
+		Db: dbClient,
 	}
 	twirpHandler := courseapi.NewCourseAPIServer(server)
 

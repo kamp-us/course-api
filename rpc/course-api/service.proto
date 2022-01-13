@@ -3,26 +3,50 @@ syntax = "proto3";
 package kampus.courseapi;
 option go_package = "/rpc/course-api";
 
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
 service CourseAPI {
   rpc GetCourse(GetCourseRequest) returns (Course);
   rpc CreateCourse(CreateCourseRequest) returns (Course);
+  rpc UpdateCourse(UpdateCourseRequest) returns (Course);
+  rpc DeleteCourse(DeleteCourseRequest) returns (google.protobuf.Empty);
+//  rpc GetLesson(GetLessonRequest) returns (Lesson);
 }
 
+// Course Start
+message GetCourseRequest {
+  string ID = 1;
+}
 
 message CreateCourseRequest {
-  string userID = 1;
+  string user_id = 1;
   string name = 2;
   string description = 3;
+  repeated string category_ids = 4;
+}
+
+message UpdateCourseRequest {
+  string ID = 1;
+  google.protobuf.StringValue name = 2;
+  google.protobuf.StringValue description = 3;
+  repeated google.protobuf.StringValue category_ids = 4;
+}
+
+message DeleteCourseRequest {
+  string ID = 1;
 }
 
 message Course {
   string ID = 1;
-  string userID = 2;
+  string user_id = 2;
   string name = 3;
   string description = 4;
-  string categoryID = 5;
+  repeated string category_ids = 5;
   string slug = 6;
 }
+// Course End
+
 
 /*   export type CreateCourseInput = { */
 /*   id?: string | null, */
