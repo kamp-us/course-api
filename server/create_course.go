@@ -2,33 +2,19 @@ package server
 
 import (
 	"context"
-	"github.com/gosimple/slug"
-	"github.com/kamp-us/course-api/internal/models"
 	api "github.com/kamp-us/course-api/rpc/course-api"
+	"github.com/twitchtv/twirp"
 )
 
 func (s *CourseAPIServer) CreateCourse(ctx context.Context, req *api.CreateCourseRequest) (*api.Course, error) {
-	course := models.Course{
-		Slug:        slug.MakeLang(req.Name, "tr"),
-		Name:        req.Name,
-		Description: req.Description,
-		UserID:      req.UserId,
+	if err := validateCreateCourseRequest(req); err != nil {
+		return nil, err
 	}
 
-	result := s.Db.Create(&course)
-	if result.Error != nil {
-		return nil, result.Error
+	course, err := s.backend.CreateCourse(ctx, req.UserId, req.Name, req.Description)
+	if err != nil {
+		return nil, twirp.InternalErrorWith(err)
 	}
-
-	//categoryIds := make([]string, 0)
-	//for _, categoryId := range req.CategoryIds {
-	//	courseCategory := models.CourseCategory{CourseID: course.ID, CategoryID: categoryId}
-	//	query := s.Db.Create(&courseCategory)
-	//	if query.Error != nil {
-	//		return nil, query.Error
-	//	}
-	//	categoryIds = append(categoryIds, categoryId)
-	//}
 
 	return &api.Course{
 		ID:          course.ID.String(),
@@ -36,6 +22,21 @@ func (s *CourseAPIServer) CreateCourse(ctx context.Context, req *api.CreateCours
 		Name:        course.Name,
 		Description: course.Description,
 		Slug:        course.Slug,
-		//CategoryIds: categoryIds,
 	}, nil
+}
+
+func validateCreateCourseRequest(req *api.CreateCourseRequest) error {
+	if req.Name == "" {
+		return twirp.RequiredArgumentError("name")
+	}
+	if req.UserId == "" {
+		return twirp.RequiredArgumentError("user_id")
+	}
+	if req.Description == "" {
+		return twirp.RequiredArgumentError("description")
+	}
+	if len(req.CategoryIds) == 0 {
+		return twirp.RequiredArgumentError("category_ids")
+	}
+	return nil
 }

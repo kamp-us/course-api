@@ -2,38 +2,32 @@ package server
 
 import (
 	"context"
-	"github.com/gosimple/slug"
-	"github.com/kamp-us/course-api/internal/models"
+
 	api "github.com/kamp-us/course-api/rpc/course-api"
+
+	"github.com/twitchtv/twirp"
+
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func (s *CourseAPIServer) UpdateCourse(ctx context.Context, req *api.UpdateCourseRequest) (*api.Course, error) {
-	course := models.Course{}
-	result := s.Db.First(&course, "id = ?", req.ID)
-	if result.Error != nil {
-		return nil, result.Error
+func (s *CourseAPIServer) UpdateCourse(ctx context.Context, req *api.UpdateCourseRequest) (*emptypb.Empty, error) {
+
+	if err := validateUpdateCourseRequest(req); err != nil {
+		return nil, err
 	}
 
-	updates := models.Course{}
-
-	if name := convertToStringPtr(req.Name); name != nil {
-		updates.Name = *name
-		updates.Slug = slug.MakeLang(*name, "tr")
+	if err := s.backend.UpdateCourse(ctx,
+		req.ID,
+		convertToStringPtr(req.Name),
+		convertToStringPtr(req.Description)); err != nil {
+		return nil, twirp.InternalErrorWith(err)
 	}
-	if description := convertToStringPtr(req.Description); description != nil {
-		updates.Description = *description
-	}
+	return &emptypb.Empty{}, nil
+}
 
-	result = s.Db.Model(&course).Updates(updates)
-	if result.Error != nil {
-		return nil, result.Error
+func validateUpdateCourseRequest(req *api.UpdateCourseRequest) error {
+	if req.ID == "" {
+		return twirp.RequiredArgumentError("id")
 	}
-
-	return &api.Course{
-		ID:          course.ID.String(),
-		UserId:      course.UserID,
-		Name:        course.Name,
-		Description: course.Description,
-		Slug:        course.Slug,
-	}, nil
+	return nil
 }

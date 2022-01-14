@@ -2,25 +2,23 @@ package server
 
 import (
 	"context"
-	"github.com/kamp-us/course-api/internal/models"
 	api "github.com/kamp-us/course-api/rpc/course-api"
+	"github.com/twitchtv/twirp"
 )
 
 func (s *CourseAPIServer) GetCourse(ctx context.Context, req *api.GetCourseRequest) (*api.Course, error) {
-	course := models.Course{}
-	result := s.Db.First(&course, "id = ?", req.ID)
-	if result.Error != nil {
-		return nil, result.Error
+
+	if err := validateGetCourseRequest(req); err != nil {
+		return nil, err
 	}
 
-	var categories []models.CourseCategory
-	query := s.Db.Model(&course).Association("Categories").Find(&categories)
-	if query != nil {
-		return nil, query
+	course, err := s.backend.GetCourse(ctx, req.ID)
+	if err != nil {
+		return nil, twirp.InternalErrorWith(err)
 	}
 
-	categoryIds := make([]string, 0)
-	for _, category := range categories {
+	var categoryIds []string
+	for _, category := range course.Categories {
 		categoryIds = append(categoryIds, category.CategoryID)
 	}
 
@@ -33,4 +31,11 @@ func (s *CourseAPIServer) GetCourse(ctx context.Context, req *api.GetCourseReque
 		CategoryIds: categoryIds,
 	}, nil
 
+}
+
+func validateGetCourseRequest(req *api.GetCourseRequest) error {
+	if req.ID == "" {
+		return twirp.RequiredArgumentError("id")
+	}
+	return nil
 }

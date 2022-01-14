@@ -9,10 +9,11 @@ import "google/protobuf/empty.proto";
 service CourseAPI {
   rpc GetCourse(GetCourseRequest) returns (Course);
   rpc CreateCourse(CreateCourseRequest) returns (Course);
-  rpc UpdateCourse(UpdateCourseRequest) returns (Course);
+  rpc UpdateCourse(UpdateCourseRequest) returns (google.protobuf.Empty);
   rpc DeleteCourse(DeleteCourseRequest) returns (google.protobuf.Empty);
   rpc CreateLesson(CreateLessonRequest) returns (Lesson);
   rpc GetLesson(GetLessonRequest) returns (Lesson);
+  rpc UpdateLesson(UpdateLessonRequest) returns (google.protobuf.Empty);
   rpc DeleteLesson(DeleteLessonRequest) returns (google.protobuf.Empty);
 }
 

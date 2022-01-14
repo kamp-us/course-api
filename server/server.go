@@ -1,9 +1,13 @@
 package server
 
 import (
-	"gorm.io/gorm"
+	"github.com/kamp-us/course-api/internal/backend"
 )
 
 type CourseAPIServer struct {
-	Db *gorm.DB
+	backend backend.Backender
+}
+
+func NewCourseAPIServer(backend backend.Backender) *CourseAPIServer {
+	return &CourseAPIServer{backend: backend}
 }

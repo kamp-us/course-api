@@ -24,6 +24,4 @@ require (
 	gorm.io/gorm v1.22.4
 )
 
-require github.com/gofrs/uuid v4.0.0+incompatible
-
 require github.com/gosimple/unidecode v1.0.1 // indirect
