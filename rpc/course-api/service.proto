@@ -3,26 +3,88 @@ syntax = "proto3";
 package kampus.courseapi;
 option go_package = "/rpc/course-api";
 
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
 service CourseAPI {
   rpc GetCourse(GetCourseRequest) returns (Course);
   rpc CreateCourse(CreateCourseRequest) returns (Course);
+  rpc UpdateCourse(UpdateCourseRequest) returns (google.protobuf.Empty);
+  rpc DeleteCourse(DeleteCourseRequest) returns (google.protobuf.Empty);
+  rpc CreateLesson(CreateLessonRequest) returns (Lesson);
+  rpc GetLesson(GetLessonRequest) returns (Lesson);
+  rpc UpdateLesson(UpdateLessonRequest) returns (google.protobuf.Empty);
+  rpc DeleteLesson(DeleteLessonRequest) returns (google.protobuf.Empty);
 }
 
+// Course Start
+message GetCourseRequest {
+  string ID = 1;
+}
 
 message CreateCourseRequest {
-  string userID = 1;
+  string user_id = 1;
   string name = 2;
   string description = 3;
+  repeated string category_ids = 4;
+}
+
+message UpdateCourseRequest {
+  string ID = 1;
+  google.protobuf.StringValue name = 2;
+  google.protobuf.StringValue description = 3;
+}
+
+message DeleteCourseRequest {
+  string ID = 1;
 }
 
 message Course {
   string ID = 1;
-  string userID = 2;
+  string user_id = 2;
   string name = 3;
   string description = 4;
-  string categoryID = 5;
-  string slug = 6;
+  string slug = 5;
+  repeated string category_ids = 6;
 }
+// Course End
+
+// Lesson Start
+
+message GetLessonRequest {
+  string ID = 1;
+}
+
+message CreateLessonRequest {
+  string user_id = 1;
+  string name = 2;
+  string description = 3;
+  string course_id = 4;
+  string video_id = 5;
+}
+
+message DeleteLessonRequest {
+  string ID = 1;
+}
+
+message UpdateLessonRequest {
+  string ID = 1;
+  google.protobuf.StringValue name = 2;
+  google.protobuf.StringValue description = 3;
+}
+
+message Lesson {
+  string ID = 1;
+  string user_id = 2;
+  string course_id = 3;
+  string video_id = 4;
+  string name = 5;
+  string description = 6;
+  string slug = 7;
+  repeated string category_ids = 8;
+}
+
+// Lesson End
 
 /*   export type CreateCourseInput = { */
 /*   id?: string | null, */

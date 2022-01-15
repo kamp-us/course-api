@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -20,7 +19,15 @@ type Course struct {
 
 	UserID string `gorm:"index"`
 
-	Categories []*Category `gorm:"many2many:categories_courses;"`
+	Categories []*CourseCategory
+	Lessons    []*Lesson
+}
+
+type CourseCategory struct {
+	ID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
+
+	CourseID   uuid.UUID
+	CategoryID string
 }
 
 type Video struct {
@@ -48,36 +55,26 @@ type Lesson struct {
 
 	UserID string `gorm:"index"`
 
-	CourseID uuid.UUID
+	// TODO: should it be uuid or is string fine?
+	CourseID string
 	Course   Course
 
-	VideoID uuid.UUID
-	Video   Video
+	//// TODO: should it be uuid or is string fine?
+	//VideoID string
+	//Video   Video
 
-	Categories []*Category `gorm:"many2many:categories_lessons;"`
+	Categories []*LessonCategory
 }
 
-type Category struct {
-	ID        uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
-	Slug      string    `gorm:"index"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
-
-	Name        string
-	Description string
-
-	Courses []*Course `gorm:"many2many:categories_courses;"`
-	Lessons []*Lesson `gorm:"many2many:categories_lessons;"`
+type LessonCategory struct {
+	ID         uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
+	LessonID   uuid.UUID
+	CategoryID string
 }
 
 func AutoMigrate(db *gorm.DB) error {
 	db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
 
-	if err := db.AutoMigrate(&Category{}); err != nil {
-		fmt.Println(">>>>>>>>>>>>>>>>>>>>>", err)
-		return err
-	}
 	if err := db.AutoMigrate(&Course{}); err != nil {
 		return err
 	}
@@ -85,6 +82,12 @@ func AutoMigrate(db *gorm.DB) error {
 		return err
 	}
 	if err := db.AutoMigrate(&Lesson{}); err != nil {
+		return err
+	}
+	if err := db.AutoMigrate(&CourseCategory{}); err != nil {
+		return err
+	}
+	if err := db.AutoMigrate(&LessonCategory{}); err != nil {
 		return err
 	}
 	return nil

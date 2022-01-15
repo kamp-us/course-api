@@ -16,7 +16,12 @@ type PostgreSQLConfig struct {
 }
 
 func NewPostgreSQLConnection(c PostgreSQLConfig) (*gorm.DB, error) {
-	return gorm.Open(postgres.Open(c.ToConnectionString()))
+	db, err := gorm.Open(postgres.Open(c.ToConnectionString()), &gorm.Config{})
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
+	//return gorm.Open(postgres.Open(c.ToConnectionString()), &gorm.Config{}), nil
 }
 
 func (c PostgreSQLConfig) ToConnectionString() string {

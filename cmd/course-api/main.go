@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/kamp-us/course-api/internal/backend"
 	"log"
 	"net/http"
 	"os"
@@ -12,7 +13,7 @@ import (
 )
 
 func main() {
-	db, err := db.NewPostgreSQLConnection(db.PostgreSQLConfig{
+	dbClient, err := db.NewPostgreSQLConnection(db.PostgreSQLConfig{
 		Host:     os.Getenv("POSTGRES_HOST"),
 		Port:     5432,
 		Username: os.Getenv("POSTGRES_USER"),
@@ -24,12 +25,15 @@ func main() {
 		log.Fatal("error while creating a db connection pool", err)
 	}
 
-	models.AutoMigrate(db)
-
-	server := &server.CourseAPIServer{
-		Db: db,
+	err = models.AutoMigrate(dbClient)
+	if err != nil {
+		return
 	}
-	twirpHandler := courseapi.NewCourseAPIServer(server)
+
+	postgreSQLBackend := backend.NewPostgreSQLBackend(dbClient)
+
+	s := server.NewCourseAPIServer(postgreSQLBackend)
+	twirpHandler := courseapi.NewCourseAPIServer(s)
 
 	mux := http.NewServeMux()
 	mux.Handle(twirpHandler.PathPrefix(), twirpHandler)
