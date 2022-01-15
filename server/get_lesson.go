@@ -19,7 +19,7 @@ func (s *CourseAPIServer) GetLesson(ctx context.Context, req *api.GetLessonReque
 	return &api.Lesson{
 		ID:          lesson.ID.String(),
 		UserId:      lesson.UserID,
-		CourseId:    lesson.CourseID,
+		CourseId:    lesson.CourseID.String(),
 		Name:        lesson.Name,
 		Description: lesson.Description,
 		Slug:        lesson.Slug,

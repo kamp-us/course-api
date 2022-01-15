@@ -2,6 +2,7 @@ package backend
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"github.com/kamp-us/course-api/internal/models"
 	"gorm.io/gorm"
 )
@@ -12,7 +13,7 @@ type Backender interface {
 	UpdateCourse(ctx context.Context, id string, name *string, description *string) error
 	DeleteCourse(ctx context.Context, id string) error
 	GetLesson(ctx context.Context, id string) (*models.Lesson, error)
-	CreateLesson(ctx context.Context, userID string, name string, description string, courseID string) (*models.Lesson, error)
+	CreateLesson(ctx context.Context, userID string, name string, description string, courseID uuid.UUID) (*models.Lesson, error)
 	UpdateLesson(ctx context.Context, id string, name *string, description *string) error
 	DeleteLesson(ctx context.Context, id string) error
 }

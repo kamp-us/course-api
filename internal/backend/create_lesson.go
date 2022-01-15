@@ -2,11 +2,12 @@ package backend
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"github.com/gosimple/slug"
 	"github.com/kamp-us/course-api/internal/models"
 )
 
-func (b *PostgreSQLBackend) CreateLesson(ctx context.Context, userID string, name string, description string, courseID string) (*models.Lesson, error) {
+func (b *PostgreSQLBackend) CreateLesson(ctx context.Context, userID string, name string, description string, courseID uuid.UUID) (*models.Lesson, error) {
 	lesson := models.Lesson{
 		Slug:        slug.MakeLang(name, "tr"),
 		Name:        name,
