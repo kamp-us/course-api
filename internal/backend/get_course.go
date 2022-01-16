@@ -12,7 +12,7 @@ func (b *PostgreSQLBackend) GetCourse(ctx context.Context, id string) (*models.C
 		return nil, result.Error
 	}
 
-	query := b.DB.Model(&course).Association("Categories")
+	query := b.DB.Preload("Categories").Find(&course)
 	if query.Error != nil {
 		return nil, query.Error
 	}

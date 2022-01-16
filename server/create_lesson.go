@@ -17,7 +17,7 @@ func (s *CourseAPIServer) CreateLesson(ctx context.Context, req *api.CreateLesso
 		return nil, err
 	}
 
-	lesson, err := s.backend.CreateLesson(ctx, req.UserId, req.Name, req.Description, courseID)
+	lesson, err := s.backend.CreateLesson(ctx, req.UserId, req.Name, req.Description, courseID, req.CategoryIds)
 	if err != nil {
 		return nil, twirp.InternalErrorWith(err)
 	}
@@ -29,6 +29,7 @@ func (s *CourseAPIServer) CreateLesson(ctx context.Context, req *api.CreateLesso
 		Name:        lesson.Name,
 		Description: lesson.Description,
 		Slug:        lesson.Slug,
+		CategoryIds: lesson.GetCategoryIDs(),
 		//VideoId:     lesson.VideoID,
 	}, nil
 }
@@ -45,6 +46,9 @@ func validateCreateLessonRequest(req *api.CreateLessonRequest) error {
 	}
 	if req.CourseId == "" {
 		return twirp.RequiredArgumentError("course_id")
+	}
+	if len(req.CategoryIds) == 0 {
+		return twirp.RequiredArgumentError("category_ids")
 	}
 	//if req.VideoId == "" {
 	//	return twirp.RequiredArgumentError("video_id")

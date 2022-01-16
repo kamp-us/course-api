@@ -61,6 +61,7 @@ message CreateLessonRequest {
   string description = 3;
   string course_id = 4;
   string video_id = 5;
+  repeated string category_ids = 6;
 }
 
 message DeleteLessonRequest {
