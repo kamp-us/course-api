@@ -23,6 +23,14 @@ type Course struct {
 	Lessons    []*Lesson
 }
 
+func (c *Course) GetCategoryIDs() []string {
+	var ids []string
+	for _, courseCategory := range c.Categories {
+		ids = append(ids, courseCategory.CategoryID)
+	}
+	return ids
+}
+
 type CourseCategory struct {
 	ID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
 
@@ -62,6 +70,14 @@ type Lesson struct {
 	//Video   Video
 
 	Categories []*LessonCategory
+}
+
+func (l *Lesson) GetCategoryIDs() []string {
+	var ids []string
+	for _, lessonCategory := range l.Categories {
+		ids = append(ids, lessonCategory.CategoryID)
+	}
+	return ids
 }
 
 type LessonCategory struct {

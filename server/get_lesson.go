@@ -23,6 +23,7 @@ func (s *CourseAPIServer) GetLesson(ctx context.Context, req *api.GetLessonReque
 		Name:        lesson.Name,
 		Description: lesson.Description,
 		Slug:        lesson.Slug,
+		CategoryIds: lesson.GetCategoryIDs(),
 	}, nil
 }
 

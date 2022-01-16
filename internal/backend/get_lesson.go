@@ -13,5 +13,10 @@ func (b *PostgreSQLBackend) GetLesson(ctx context.Context, id string) (*models.L
 		return nil, result.Error
 	}
 
+	query := b.DB.Preload("Categories").Find(&lesson)
+	if query.Error != nil {
+		return nil, query.Error
+	}
+
 	return &lesson, nil
 }

@@ -16,12 +16,11 @@ func (s *CourseAPIServer) UpdateCourse(ctx context.Context, req *api.UpdateCours
 		return nil, err
 	}
 
-	if err := s.backend.UpdateCourse(ctx,
-		req.ID,
-		convertToStringPtr(req.Name),
-		convertToStringPtr(req.Description)); err != nil {
+	err := s.backend.UpdateCourse(ctx, req.ID, convertToStringPtr(req.Name), convertToStringPtr(req.Description))
+	if err != nil {
 		return nil, twirp.InternalErrorWith(err)
 	}
+
 	return &emptypb.Empty{}, nil
 }
 

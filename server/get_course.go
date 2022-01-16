@@ -7,7 +7,6 @@ import (
 )
 
 func (s *CourseAPIServer) GetCourse(ctx context.Context, req *api.GetCourseRequest) (*api.Course, error) {
-
 	if err := validateGetCourseRequest(req); err != nil {
 		return nil, err
 	}
@@ -17,18 +16,13 @@ func (s *CourseAPIServer) GetCourse(ctx context.Context, req *api.GetCourseReque
 		return nil, twirp.InternalErrorWith(err)
 	}
 
-	var categoryIds []string
-	for _, category := range course.Categories {
-		categoryIds = append(categoryIds, category.CategoryID)
-	}
-
 	return &api.Course{
 		ID:          course.ID.String(),
 		UserId:      course.UserID,
 		Name:        course.Name,
 		Description: course.Description,
 		Slug:        course.Slug,
-		CategoryIds: categoryIds,
+		CategoryIds: course.GetCategoryIDs(),
 	}, nil
 
 }

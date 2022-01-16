@@ -11,7 +11,7 @@ func (s *CourseAPIServer) CreateCourse(ctx context.Context, req *api.CreateCours
 		return nil, err
 	}
 
-	course, err := s.backend.CreateCourse(ctx, req.UserId, req.Name, req.Description)
+	course, err := s.backend.CreateCourse(ctx, req.UserId, req.Name, req.Description, req.CategoryIds)
 	if err != nil {
 		return nil, twirp.InternalErrorWith(err)
 	}
@@ -22,6 +22,7 @@ func (s *CourseAPIServer) CreateCourse(ctx context.Context, req *api.CreateCours
 		Name:        course.Name,
 		Description: course.Description,
 		Slug:        course.Slug,
+		CategoryIds: course.GetCategoryIDs(),
 	}, nil
 }
 
