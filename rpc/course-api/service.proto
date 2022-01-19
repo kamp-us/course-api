@@ -12,6 +12,7 @@ service CourseAPI {
   rpc UpdateCourse(UpdateCourseRequest) returns (google.protobuf.Empty);
   rpc DeleteCourse(DeleteCourseRequest) returns (google.protobuf.Empty);
   rpc GetBatchCourses(GetBatchCoursesRequest) returns (GetBatchCoursesResponse);
+  rpc GetCoursesByCategoryID(GetCoursesByCategoryIDRequest) returns (GetCoursesByCategoryIDResponse);
   rpc CreateLesson(CreateLessonRequest) returns (Lesson);
   rpc GetLesson(GetLessonRequest) returns (Lesson);
   rpc UpdateLesson(UpdateLessonRequest) returns (google.protobuf.Empty);
@@ -46,6 +47,14 @@ message GetBatchCoursesRequest {
 }
 
 message GetBatchCoursesResponse {
+  repeated Course courses = 1;
+}
+
+message GetCoursesByCategoryIDRequest {
+  string ID = 1;
+}
+
+message GetCoursesByCategoryIDResponse {
   repeated Course courses = 1;
 }
 

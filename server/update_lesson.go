@@ -23,7 +23,7 @@ func (s *CourseAPIServer) UpdateLesson(ctx context.Context, req *api.UpdateLesso
 
 func validateUpdateLessonRequest(req *api.UpdateLessonRequest) error {
 	if req.ID == "" {
-		return twirp.RequiredArgumentError("id")
+		return twirp.RequiredArgumentError("ID")
 	}
 	return nil
 }

@@ -35,6 +35,7 @@ type CourseCategory struct {
 	ID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
 
 	CourseID   uuid.UUID
+	Course     Course
 	CategoryID string
 }
 

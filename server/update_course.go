@@ -26,7 +26,7 @@ func (s *CourseAPIServer) UpdateCourse(ctx context.Context, req *api.UpdateCours
 
 func validateUpdateCourseRequest(req *api.UpdateCourseRequest) error {
 	if req.ID == "" {
-		return twirp.RequiredArgumentError("id")
+		return twirp.RequiredArgumentError("ID")
 	}
 	return nil
 }
