@@ -14,6 +14,7 @@ type Backender interface {
 	DeleteCourse(ctx context.Context, id string) error
 	GetBatchCourses(ctx context.Context, ids []string) ([]*models.Course, error)
 	GetCoursesByCategoryID(ctx context.Context, id string) ([]*models.Course, error)
+	GetCourseBySlug(ctx context.Context, slug string) (*models.Course, error)
 	GetLesson(ctx context.Context, id string) (*models.Lesson, error)
 	CreateLesson(ctx context.Context, userID string, name string, description string, courseID uuid.UUID, categoryIDs []string) (*models.Lesson, error)
 	UpdateLesson(ctx context.Context, id string, name *string, description *string) error

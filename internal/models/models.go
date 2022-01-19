@@ -1,6 +1,7 @@
 package models
 
 import (
+	api "github.com/kamp-us/course-api/rpc/course-api"
 	"time"
 
 	"github.com/google/uuid"
@@ -29,6 +30,17 @@ func (c *Course) GetCategoryIDs() []string {
 		ids = append(ids, courseCategory.CategoryID)
 	}
 	return ids
+}
+
+func (c *Course) ToAPIModel() *api.Course {
+	return &api.Course{
+		ID:          c.ID.String(),
+		UserId:      c.UserID,
+		Name:        c.Name,
+		Description: c.Description,
+		Slug:        c.Slug,
+		CategoryIds: c.GetCategoryIDs(),
+	}
 }
 
 type CourseCategory struct {
