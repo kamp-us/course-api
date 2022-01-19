@@ -82,8 +82,10 @@ func (l *Lesson) GetCategoryIDs() []string {
 }
 
 type LessonCategory struct {
-	ID         uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
+	ID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
+
 	LessonID   uuid.UUID
+	Lesson     Lesson
 	CategoryID string
 }
 
