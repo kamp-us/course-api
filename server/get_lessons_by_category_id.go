@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	api "github.com/kamp-us/course-api/rpc/course-api"
+	"github.com/kamp-us/course-api/server/helper"
 	"github.com/twitchtv/twirp"
 )
 
@@ -18,16 +19,8 @@ func (s *CourseAPIServer) GetLessonsByCategoryID(ctx context.Context, req *api.G
 
 	var batch []*api.Lesson
 	for _, model := range lessons {
-		course := &api.Lesson{
-			ID:          model.ID.String(),
-			UserId:      model.UserID,
-			CourseId:    model.CourseID.String(),
-			Name:        model.Name,
-			Description: model.Description,
-			Slug:        model.Slug,
-			CategoryIds: model.GetCategoryIDs(),
-		}
-		batch = append(batch, course)
+		lesson := helper.ConvertToLessonModel(model)
+		batch = append(batch, lesson)
 	}
 
 	return &api.GetLessonsByCategoryIDResponse{Lessons: batch}, nil

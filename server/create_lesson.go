@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/google/uuid"
 	api "github.com/kamp-us/course-api/rpc/course-api"
+	"github.com/kamp-us/course-api/server/helper"
 	"github.com/twitchtv/twirp"
 )
 
@@ -22,16 +23,7 @@ func (s *CourseAPIServer) CreateLesson(ctx context.Context, req *api.CreateLesso
 		return nil, twirp.InternalErrorWith(err)
 	}
 
-	return &api.Lesson{
-		ID:          lesson.ID.String(),
-		UserId:      lesson.UserID,
-		CourseId:    lesson.CourseID.String(),
-		Name:        lesson.Name,
-		Description: lesson.Description,
-		Slug:        lesson.Slug,
-		CategoryIds: lesson.GetCategoryIDs(),
-		//VideoId:     lesson.VideoID,
-	}, nil
+	return helper.ConvertToLessonModel(lesson), nil
 }
 
 func validateCreateLessonRequest(req *api.CreateLessonRequest) error {
@@ -50,8 +42,5 @@ func validateCreateLessonRequest(req *api.CreateLessonRequest) error {
 	if len(req.CategoryIds) == 0 {
 		return twirp.RequiredArgumentError("category_ids")
 	}
-	//if req.VideoId == "" {
-	//	return twirp.RequiredArgumentError("video_id")
-	//}
 	return nil
 }

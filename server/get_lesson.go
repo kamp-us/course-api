@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	api "github.com/kamp-us/course-api/rpc/course-api"
+	"github.com/kamp-us/course-api/server/helper"
 	"github.com/twitchtv/twirp"
 )
 
@@ -16,15 +17,7 @@ func (s *CourseAPIServer) GetLesson(ctx context.Context, req *api.GetLessonReque
 		return nil, twirp.InternalErrorWith(err)
 	}
 
-	return &api.Lesson{
-		ID:          lesson.ID.String(),
-		UserId:      lesson.UserID,
-		CourseId:    lesson.CourseID.String(),
-		Name:        lesson.Name,
-		Description: lesson.Description,
-		Slug:        lesson.Slug,
-		CategoryIds: lesson.GetCategoryIDs(),
-	}, nil
+	return helper.ConvertToLessonModel(lesson), nil
 }
 
 func validateGetLessonRequest(req *api.GetLessonRequest) error {
