@@ -21,7 +21,7 @@ func (s *CourseAPIServer) DeleteLesson(ctx context.Context, req *api.DeleteLesso
 
 func validateDeleteLessonRequest(req *api.DeleteLessonRequest) error {
 	if req.ID == "" {
-		return twirp.RequiredArgumentError("id")
+		return twirp.RequiredArgumentError("ID")
 	}
 	return nil
 }

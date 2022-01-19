@@ -26,7 +26,7 @@ func convertToStringPtr(value *wrapperspb.StringValue) *string {
 
 func validateDeleteCourseRequest(req *api.DeleteCourseRequest) error {
 	if req.ID == "" {
-		return twirp.RequiredArgumentError("id")
+		return twirp.RequiredArgumentError("ID")
 	}
 	return nil
 }
