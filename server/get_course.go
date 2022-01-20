@@ -18,7 +18,6 @@ func (s *CourseAPIServer) GetCourse(ctx context.Context, req *api.GetCourseReque
 	}
 
 	return helper.ConvertToCourseModel(course), nil
-
 }
 
 func validateGetCourseRequest(req *api.GetCourseRequest) error {
