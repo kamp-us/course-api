@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	api "github.com/kamp-us/course-api/rpc/course-api"
+	"github.com/kamp-us/course-api/server/helper"
 	"github.com/twitchtv/twirp"
 )
 
@@ -16,7 +17,7 @@ func (s *CourseAPIServer) GetCourseBySlug(ctx context.Context, req *api.GetCours
 		return nil, twirp.InternalErrorWith(err)
 	}
 
-	return &api.GetCourseBySlugResponse{Course: course.ToAPIModel()}, nil
+	return &api.GetCourseBySlugResponse{Course: helper.ConvertToCourseModel(course)}, nil
 }
 
 func validateGetCourseBySlugRequest(req *api.GetCourseBySlugRequest) error {
