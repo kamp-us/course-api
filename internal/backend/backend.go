@@ -21,6 +21,7 @@ type Backender interface {
 	DeleteLesson(ctx context.Context, id string) error
 	GetBatchLessons(ctx context.Context, ids []string) ([]*models.Lesson, error)
 	GetLessonsByCategoryID(ctx context.Context, id string) ([]*models.Lesson, error)
+	GetLessonBySlug(ctx context.Context, slug string) (*models.Lesson, error)
 }
 
 type PostgreSQLBackend struct {

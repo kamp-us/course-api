@@ -81,18 +81,6 @@ func (l *Lesson) GetCategoryIDs() []string {
 	return ids
 }
 
-func (l *Lesson) ToAPIModel() *api.Lesson {
-	return &api.Lesson{
-		ID:          l.ID.String(),
-		UserId:      l.UserID,
-		CourseId:    l.CourseID.String(),
-		Name:        l.Name,
-		Description: l.Description,
-		Slug:        l.Slug,
-		CategoryIds: l.GetCategoryIDs(),
-	}
-}
-
 type LessonCategory struct {
 	ID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
 
